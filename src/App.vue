@@ -1,28 +1,37 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <TopHeader />
+    <div id="nav">
+      <!-- <router-link to="/login">Login</router-link> |
+      <router-link to="/register">Register</router-link> | -->
+    </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Register from "./views/Register.vue";
+import TopHeader from "./components/TopHeader";
 
 export default {
-  name: 'App',
+  name: "App",
+  Components: {
+    Register: Register,
+  },
   components: {
-    HelloWorld
-  }
-}
+    TopHeader: TopHeader,
+  },
+};
 </script>
 
-<style>
+<style scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 650px;
+  width: 100%;
+  background-color: #111c13;
 }
 </style>
