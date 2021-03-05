@@ -9,7 +9,7 @@ export default {};
 <style scoped>
 div {
   width: 400px;
-  height: 75px;
+  height: 55px;
   background-color: #c7d6ca;
   padding: 0;
   display: flex;
@@ -22,7 +22,7 @@ a {
   text-decoration: none;
   text-align: center;
   font-weight: bold;
-  font-size: 21px;
+  font-size: 20px;
 
   width: 100%;
   color: black;

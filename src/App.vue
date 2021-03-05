@@ -1,25 +1,25 @@
 <template>
   <div id="app">
-    <TopHeader />
-    <div id="nav">
-      <!-- <router-link to="/login">Login</router-link> |
+    <div id="nav-container">
+      <div id="nav">
+        <TopHeader />
+        <CurrentUser />
+        <!-- <router-link to="/login">Login</router-link> |
       <router-link to="/register">Register</router-link> | -->
+      </div>
     </div>
     <router-view />
   </div>
 </template>
 
 <script>
-import Register from "./views/Register.vue";
-import TopHeader from "./components/TopHeader";
+import TopHeader from "./components/App/TopHeader";
+import CurrentUser from "./components/App/CurrentUser";
 
 export default {
-  name: "App",
-  Components: {
-    Register: Register,
-  },
   components: {
     TopHeader: TopHeader,
+    CurrentUser: CurrentUser,
   },
 };
 </script>
@@ -31,7 +31,12 @@ export default {
   align-items: center;
   flex-direction: column;
   height: 650px;
-  width: 100%;
   background-color: #111c13;
+}
+
+#nav-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

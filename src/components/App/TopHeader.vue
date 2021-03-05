@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <span v-if="loggedIn"><button @click="signOut">Sign Out</button></span>
+  <div id="topHeader">
+    <router-link to="secret">members page</router-link> |
+    <router-link to="Login">Login page</router-link> |
+    <span v-if="loggedIn"><button @click="signOut">Sign Out</button></span>|
     <!-- <span v-else>No</span>  -->
   </div>
 </template>
@@ -41,4 +43,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+a {
+  color: white;
+}
+
+#topHeader {
+  display: flex;
+  flex-direction: column;
+}
+</style>

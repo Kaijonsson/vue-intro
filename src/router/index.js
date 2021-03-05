@@ -39,11 +39,20 @@ const router = new VueRouter({
   routes,
 });
 
+// const { isNavigationFailure, NavigationFailureType } = VueRouter;
+
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const isAuthenticated = firebase.auth().currentUser;
   if (requiresAuth && !isAuthenticated) {
     next("/login");
+
+    // .catch((failure) => {
+    //   if (isNavigationFailure(failure, NavigationFailureType.duplicated)) {
+    //     // show a small notification to the user
+    //     console.log(failure);
+    //   }
+    // });
   } else {
     next();
   }

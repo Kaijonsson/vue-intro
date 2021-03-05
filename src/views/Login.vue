@@ -2,17 +2,21 @@
   <div id="LoginForm">
     <form class="inlogg" @submit.prevent="pressed">
       <div class="login">
-        <input type="email" placeholder="Login" v-model="email" />
+        <input type="email" placeholder="Login" v-model="userToLogin.email" />
       </div>
       <div class="password">
-        <input type="password" placeholder="password" v-model="password" />
+        <input
+          type="password"
+          placeholder="password"
+          v-model="userToLogin.password"
+        />
       </div>
       <div class="loginButton">
         <button type="submit">Login</button>
       </div>
     </form>
-    <div class="error" v-if="error">
-      {{ error.message }}
+    <div class="error" v-if="userToLogin.error">
+      <LoginError />
     </div>
     <span id="registerGuide">
       Need an account? Create here
@@ -24,24 +28,32 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/auth";
-
+import LoginError from "../components/Login/LoginError";
 export default {
   data() {
     return {
-      email: "",
-      password: "",
-      error: "",
+      userToLogin: {
+        email: "",
+        password: "",
+        error: false,
+      },
     };
   },
   methods: {
-    async pressed() {
+    pressed: function() {
       try {
-        const data = await firebase
+        firebase
           .auth()
-          .signInWithEmailAndPassword(this.email, this.password);
-        console.log(data);
-        this.$router.replace({ name: "secret" });
+          .signInWithEmailAndPassword(
+            this.userToLogin.email,
+            this.userToLogin.password
+          )
+          .then(() => {
+            this.$router.replace({ name: "secret" });
+          });
       } catch (err) {
+        this.userToLogin.error = true;
+        LoginError.writeLoginErrorMessage(err);
         console.log(err);
       }
     },
