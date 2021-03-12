@@ -68,8 +68,8 @@ export default {
       firebase
         .auth()
         .createUserWithEmailAndPassword(
-          this.registerUser.email,
-          this.registerUser.password
+          this.capitalizeFirstLetter(this.registerUser.email),
+          this.capitalizeFirstLetter(this.registerUser.password)
         )
         .then(() => {
           const userId = firebase.auth().currentUser.uid;
@@ -99,7 +99,10 @@ export default {
     },
 
     logCurrentUser(fname, lname) {
-      const activeUser = fname + " " + lname;
+      const activeUser =
+        this.capitalizeFirstLetter(fname) +
+        " " +
+        this.capitalizeFirstLetter(lname);
       Vue.prototype.$registeredUser = activeUser;
     },
 
