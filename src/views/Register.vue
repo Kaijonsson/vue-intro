@@ -1,10 +1,10 @@
 <template>
   <div id="Register">
     <Home />
-    <div class="registerError" v-if="registerUser.error">
-      <Error />
-    </div>
-    <form @submit.prevent="pressed" class="inlogg">
+    <form @submit.prevent="pressed" class="inlogg" novalidate>
+      <div class="registerError" v-if="registerUser.EmptyError">
+        {{ registerUser.EmptyError }}
+      </div>
       <div class="name">
         <input type="fName" v-model="registerUser.fName" placeholder="Name" />
       </div>
@@ -14,6 +14,9 @@
           v-model="registerUser.lName"
           placeholder="Last Name"
         />
+      </div>
+      <div class="registerError" v-if="registerUser.error">
+        {{ registerUser.error }}
       </div>
       <div class="email">
         <input type="email" v-model="registerUser.email" placeholder="email" />
@@ -38,18 +41,30 @@ import "firebase/auth";
 import "firebase/database";
 import Home from "../components/Register/Home.vue";
 import { dataBase } from "../main";
-import CurrentUser from "../components/App/CurrentUser";
-import Error from "../components/Register/Error";
+import Vue from "vue";
 
 export default {
-  name: "Register",
-
   components: {
     Home: Home,
-    Error: Error,
   },
   methods: {
     pressed: function() {
+      const postEmptyError = () => {
+        this.registerUser.EmptyError = "Can't submit empty field/fields";
+      };
+      if (
+        !this.registerUser.fName ||
+        !this.registerUser.lName ||
+        !this.registerUser.email ||
+        !this.registerUser.password
+      ) {
+        postEmptyError();
+      } else {
+        this.firebaseAuth();
+      }
+    },
+
+    firebaseAuth() {
       firebase
         .auth()
         .createUserWithEmailAndPassword(
@@ -58,28 +73,38 @@ export default {
         )
         .then(() => {
           const userId = firebase.auth().currentUser.uid;
-          const userEmail = this.registerUser.email;
           const firstName = this.registerUser.fName;
           const lastName = this.registerUser.lName;
+          const userEmail = this.registerUser.email;
 
-          this.writeUserData(userId, firstName, lastName, userEmail);
-          CurrentUser.methods.transmitter(userId);
+          this.writeUserDataBase(userId, firstName, lastName, userEmail);
+          this.logCurrentUser(firstName, lastName);
+
           this.$router.replace({ name: "login" });
         })
         .catch((err) => {
           console.log(err);
-          Error.methods.writeErrorMessage(err).then(() => {
-            !!this.registerUser.error;
-          });
-          // Error.methods.writeUserData(err);
+          this.registerUser.error = err.message;
         });
     },
 
-    writeUserData(userId, fName, lName, email) {
+    writeUserDataBase(userId, fName, lName, email) {
       dataBase.ref("users/" + userId).set({
-        username: fName + " " + lName,
+        username:
+          this.capitalizeFirstLetter(fName) +
+          " " +
+          this.capitalizeFirstLetter(lName),
         email: email,
       });
+    },
+
+    logCurrentUser(fname, lname) {
+      const activeUser = fname + " " + lname;
+      Vue.prototype.$registeredUser = activeUser;
+    },
+
+    capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     },
   },
 
@@ -89,7 +114,8 @@ export default {
         email: "",
         fName: "",
         lName: "",
-        error: Boolean,
+        error: "",
+        EmptyError: "",
       },
     };
   },
@@ -102,6 +128,11 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.registerError {
+  color: red;
+  font-size: 18px;
 }
 
 input,

@@ -1,6 +1,13 @@
 <template>
   <div id="LoginForm">
-    <form class="inlogg" @submit.prevent="pressed">
+    <form class="inlogg" @submit.prevent="clicked" novalidate>
+      <div>
+        <p v-if="userToLogin.emptyError" class="error">
+          {{ userToLogin.emptyError }}
+        </p>
+      </div>
+      <div class="error" v-if="userToLogin.error">{{ userToLogin.error }}</div>
+
       <div class="login">
         <input type="email" placeholder="Login" v-model="userToLogin.email" />
       </div>
@@ -15,9 +22,6 @@
         <button type="submit">Login</button>
       </div>
     </form>
-    <div class="error" v-if="userToLogin.error">
-      <LoginError />
-    </div>
     <span id="registerGuide">
       Need an account? Create here
       <router-link to="/register">Register</router-link></span
@@ -28,34 +32,73 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/auth";
-import LoginError from "../components/Login/LoginError";
+import Vue from "vue";
+
 export default {
   data() {
     return {
       userToLogin: {
         email: "",
         password: "",
-        error: false,
+        error: "",
+        emptyError: "",
       },
     };
   },
   methods: {
-    pressed: function() {
-      try {
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(
-            this.userToLogin.email,
-            this.userToLogin.password
-          )
-          .then(() => {
-            this.$router.replace({ name: "secret" });
-          });
-      } catch (err) {
-        this.userToLogin.error = true;
-        LoginError.writeLoginErrorMessage(err);
-        console.log(err);
+    clicked: function() {
+      const emptyError = () => {
+        this.userToLogin.emptyError = "Can't submit empty field/fields";
+      };
+
+      if (!this.userToLogin.email || !this.userToLogin.password) {
+        emptyError();
+      } else {
+        this.login();
       }
+    },
+
+    login() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(
+          this.userToLogin.email,
+          this.userToLogin.password
+        )
+        .catch((err) => {
+          this.userToLogin.error = err.message;
+          if (err.code === "auth/user-not-found") {
+            this.userToLogin.error = "User does not exist";
+          }
+          console.log(err.code);
+          console.log(err);
+        })
+        .then(() => {
+          // Vue.prototype.$loggedInUser = this.userToLogin.email;
+          Vue.prototype.$userId = firebase.auth().currentUser.uid;
+          Vue.prototype.$loggedInUser = this.getUserName(this.$userId);
+
+          this.$router.replace({ name: "secret" });
+        });
+    },
+
+    getUserName() {
+      const fetchedUser = firebase
+        .database()
+        .ref()
+        .child("users")
+        .child(this.$userId)
+        .get()
+        .then((usersObject) => {
+          if (usersObject.exists()) {
+            return usersObject.child("username").val();
+          }
+        });
+      const userResponse = fetchedUser.then((response) => {
+        return response;
+      });
+      console.log(userResponse);
+      return userResponse;
     },
   },
 };

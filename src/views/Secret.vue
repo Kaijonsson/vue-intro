@@ -2,6 +2,7 @@
   <div class="container page-wrapper">
     <div class="page-inner">
       <div class="row">
+        <div><h1>This page is only for members</h1></div>
         <div class="el-wrapper">
           <div class="box-up">
             <img
@@ -11,7 +12,7 @@
             />
             <div class="img-info">
               <div class="info-inner">
-                <span class="p-name">I feel like Pablo</span>
+                <span class="p-name">Samir, do you feel like Pablo?</span>
                 <span class="p-company">Yeezy</span>
               </div>
               <div class="a-size">
@@ -53,6 +54,11 @@ html {
   height: 100%;
 }
 
+h1 {
+  color: white;
+  text-decoration: underline;
+}
+
 .d-flex {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -86,7 +92,6 @@ body {
 
 .page-wrapper .page-inner {
   display: table-cell;
-  vertical-align: middle;
 }
 
 .el-wrapper {

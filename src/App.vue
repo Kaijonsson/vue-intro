@@ -3,9 +3,6 @@
     <div id="nav-container">
       <div id="nav">
         <TopHeader />
-        <CurrentUser />
-        <!-- <router-link to="/login">Login</router-link> |
-      <router-link to="/register">Register</router-link> | -->
       </div>
     </div>
     <router-view />
@@ -14,12 +11,10 @@
 
 <script>
 import TopHeader from "./components/App/TopHeader";
-import CurrentUser from "./components/App/CurrentUser";
 
 export default {
   components: {
     TopHeader: TopHeader,
-    CurrentUser: CurrentUser,
   },
 };
 </script>
@@ -30,13 +25,13 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 650px;
+  height: 700px;
   background-color: #111c13;
 }
 
 #nav-container {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: initial;
 }
 </style>

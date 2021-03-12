@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>This is the Home page</h1>
     <button @click.prevent="navToLogin">Login</button>
   </div>
 </template>
@@ -17,6 +18,12 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  text-align: center;
+  color: white;
+  text-decoration: underline;
+}
+
 button {
   width: 400px;
   height: 75px;
